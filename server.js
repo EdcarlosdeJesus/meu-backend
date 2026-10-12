@@ -49,6 +49,13 @@ app.get('/api/finance', (req, res) => {
   });
 });
 
+// rota de cabeçalhos
+app.get('/api/headers', (req, res) => {
+  res.json({
+    headersRecebidos: req.headers
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
