@@ -6,17 +6,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Rota de saúde (health check)
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API está saudável!' });
 });
 
 // Rota de ping (teste simples)
-app.get('/ping', (req, res) => {
+app.get('/api/ping', (req, res) => {
   res.json({ status: 'ok', reply: 'pong' });
 });
 
 // Rota de erro controlado
-app.get('/error', (req, res) => {
+app.get('/api/error', (req, res) => {
   res.status(500).json({ status: 'error', message: 'Erro simulado para teste' });
 });
 
