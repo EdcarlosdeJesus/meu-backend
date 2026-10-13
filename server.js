@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
       <body style="font-family: Arial; background: linear-gradient(135deg, #1e90ff, #8a2be2); color: white; text-align: center; padding: 40px;">
         
         <marquee behavior="alternate" direction="left" scrollamount="10" style="font-size: 2em; color: #ffeb3b; margin-bottom: 20px;">
-          🚀 API do Ed Carlos • Estudo Cequence 🚀
+          🚀 API • Estudo Cequence 🚀
         </marquee>
         
         <h1 style="font-size: 3em;">✨ Bem-vindo ✨</h1>
