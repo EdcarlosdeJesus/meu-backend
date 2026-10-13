@@ -7,7 +7,7 @@ app.get('/', (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>API Ed Carlos - Cequence Study</title>
+        <title>API - Cequence Study</title>
       </head>
       <body style="font-family: Arial; background: linear-gradient(135deg, #1e90ff, #8a2be2); color: white; text-align: center; padding: 40px;">
         
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
         
         <hr style="margin: 20px 0; border: 1px solid #fff;">
         <footer style="margin-top: 30px; font-size: 1.2em;">
-          ✨ Projeto de estudo • <b>Ed Carlos</b> • API • Cequence ✨
+          ✨ Projeto de estudo • <b>Criado por Ed Carlos</b> • API • Data Protection ✨
         </footer>
       </body>
     </html>
