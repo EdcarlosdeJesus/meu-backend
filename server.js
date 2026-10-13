@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// rota principal personalizada com estilo
+// rota principal personalizada com gradiente
 app.get('/', (req, res) => {
   res.send(`
     <html>
       <head>
         <title>API Ed Carlos - Cequence Study</title>
       </head>
-      <body style="font-family: Arial; background-color: #1e90ff; color: white; text-align: center; padding: 40px;">
-        <h1 style="font-size: 3em;">🚀 API criado por Ed Carlos</h1>
+      <body style="font-family: Arial; background: linear-gradient(135deg, #1e90ff, #8a2be2); color: white; text-align: center; padding: 40px;">
+        <h1 style="font-size: 3em;">🚀 API do Ed Carlos</h1>
         <p style="font-size: 1.5em;">Estudo prático com <b>Cequence</b></p>
         <hr style="margin: 20px 0; border: 1px solid #fff;">
         <p>Explore as rotas:</p>
@@ -24,12 +24,13 @@ app.get('/', (req, res) => {
         </ul>
         <hr style="margin: 20px 0; border: 1px solid #fff;">
         <footer style="margin-top: 30px; font-size: 1.2em;">
-          ✨ Projeto de estudo • <b>Data Protection</b> • API • Cequence ✨
+          ✨ Projeto de estudo • <b>Ed Carlos</b> • API • Cequence ✨
         </footer>
       </body>
     </html>
   `);
 });
+
 
 
 
