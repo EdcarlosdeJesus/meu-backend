@@ -3,9 +3,22 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // rota principal
+// rota principal personalizada
 app.get('/', (req, res) => {
-  res.send('Backend simples rodando na Vercel!');
+  res.send(`
+    🚀 Bem-vindo à API do Ed Carlos!<br><br>
+    Este é um projeto de <b>estudo com a ferramenta Cequence</b>.<br><br>
+    Explore as rotas disponíveis:<br>
+    - <a href="/api/test">/api/test</a><br>
+    - <a href="/api/health">/api/health</a><br>
+    - <a href="/api/ping">/api/ping</a><br>
+    - <a href="/api/error">/api/error</a><br>
+    - <a href="/api/finance">/api/finance</a><br>
+    - <a href="/api/headers">/api/headers</a><br><br>
+    <b>Ed Carlos • API • Cequence Study</b>
+  `);
 });
+
 
 // rota de teste
 app.get('/api/test', (req, res) => {
