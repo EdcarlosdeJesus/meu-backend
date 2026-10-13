@@ -2,22 +2,35 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// rota principal
-// rota principal personalizada
+// rota principal personalizada com estilo
 app.get('/', (req, res) => {
   res.send(`
-    🚀 Bem-vindo à API do Ed Carlos!<br><br>
-    Este é um projeto de <b>estudo com a ferramenta Cequence</b>.<br><br>
-    Explore as rotas disponíveis:<br>
-    - <a href="/api/test">/api/test</a><br>
-    - <a href="/api/health">/api/health</a><br>
-    - <a href="/api/ping">/api/ping</a><br>
-    - <a href="/api/error">/api/error</a><br>
-    - <a href="/api/finance">/api/finance</a><br>
-    - <a href="/api/headers">/api/headers</a><br><br>
-    <b>Ed Carlos • API • Cequence Study</b>
+    <html>
+      <head>
+        <title>API Ed Carlos - Cequence Study</title>
+      </head>
+      <body style="font-family: Arial; background-color: #1e90ff; color: white; text-align: center; padding: 40px;">
+        <h1 style="font-size: 3em;">🚀 API criado por Ed Carlos</h1>
+        <p style="font-size: 1.5em;">Estudo prático com <b>Cequence</b></p>
+        <hr style="margin: 20px 0; border: 1px solid #fff;">
+        <p>Explore as rotas:</p>
+        <ul style="list-style: none; padding: 0; font-size: 1.2em;">
+          <li>🔗 <a href="/api/test" style="color: #ffeb3b;">/api/test</a></li>
+          <li>❤️ <a href="/api/health" style="color: #ffeb3b;">/api/health</a></li>
+          <li>📡 <a href="/api/ping" style="color: #ffeb3b;">/api/ping</a></li>
+          <li>⚠️ <a href="/api/error" style="color: #ffeb3b;">/api/error</a></li>
+          <li>💰 <a href="/api/finance" style="color: #ffeb3b;">/api/finance</a></li>
+          <li>📑 <a href="/api/headers" style="color: #ffeb3b;">/api/headers</a></li>
+        </ul>
+        <hr style="margin: 20px 0; border: 1px solid #fff;">
+        <footer style="margin-top: 30px; font-size: 1.2em;">
+          ✨ Projeto de estudo • <b>Data Protection</b> • API • Cequence ✨
+        </footer>
+      </body>
+    </html>
   `);
 });
+
 
 
 // rota de teste
