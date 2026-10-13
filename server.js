@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// rota principal personalizada com gradiente
+// rota principal personalizada com gradiente e banner animado
 app.get('/', (req, res) => {
   res.send(`
     <html>
@@ -10,10 +10,16 @@ app.get('/', (req, res) => {
         <title>API Ed Carlos - Cequence Study</title>
       </head>
       <body style="font-family: Arial; background: linear-gradient(135deg, #1e90ff, #8a2be2); color: white; text-align: center; padding: 40px;">
-        <h1 style="font-size: 3em;">🚀 API do Ed Carlos</h1>
-        <p style="font-size: 1.5em;">Estudo prático com <b>Cequence</b></p>
+        
+        <marquee behavior="alternate" direction="left" scrollamount="10" style="font-size: 2em; color: #ffeb3b; margin-bottom: 20px;">
+          🚀 API do Ed Carlos • Estudo Cequence 🚀
+        </marquee>
+        
+        <h1 style="font-size: 3em;">✨ Bem-vindo ✨</h1>
+        <p style="font-size: 1.5em;">Explorando <b>APIs</b> e segurança com <b>Cequence</b></p>
+        
         <hr style="margin: 20px 0; border: 1px solid #fff;">
-        <p>Explore as rotas:</p>
+        <p>Rotas disponíveis:</p>
         <ul style="list-style: none; padding: 0; font-size: 1.2em;">
           <li>🔗 <a href="/api/test" style="color: #ffeb3b;">/api/test</a></li>
           <li>❤️ <a href="/api/health" style="color: #ffeb3b;">/api/health</a></li>
@@ -22,6 +28,7 @@ app.get('/', (req, res) => {
           <li>💰 <a href="/api/finance" style="color: #ffeb3b;">/api/finance</a></li>
           <li>📑 <a href="/api/headers" style="color: #ffeb3b;">/api/headers</a></li>
         </ul>
+        
         <hr style="margin: 20px 0; border: 1px solid #fff;">
         <footer style="margin-top: 30px; font-size: 1.2em;">
           ✨ Projeto de estudo • <b>Ed Carlos</b> • API • Cequence ✨
@@ -30,6 +37,7 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
+
 
 
 
