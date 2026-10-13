@@ -2,47 +2,68 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// rota principal personalizada
+// rota principal
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <title>API Ed Carlos - Estudo Cequence</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1e90ff, #00ced1);
-            color: white;
-            text-align: center;
-            padding: 50px;
-          }
-          h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-          }
-          p {
-            font-size: 1.5em;
-          }
-          .highlight {
-            font-weight: bold;
-            color: #ffeb3b;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>🚀 Bem-vindo à API do Ed Carlos!</h1>
-        <p>Este é um <span class="highlight">projeto de estudo</span> com a ferramenta <span class="highlight">Cequence</span>.</p>
-        <p>Explore as rotas: <br/>
-          <a href="/api/test">/api/test</a> | 
-          <a href="/api/health">/api/health</a> | 
-          <a href="/api/ping">/api/ping</a> | 
-          <a href="/api/error">/api/error</a> | 
-          <a href="/api/finance">/api/finance</a> | 
-          <a href="/api/headers">/api/headers</a>
-        </p>
-      </body>
-    </html>
-  `);
+  res.send('Backend simples rodando na Vercel!');
 });
 
-// demais rotas continuam iguais...
+// rota de teste
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API funcionando!' });
+});
+
+// rota de saúde fictícia
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    hospital: 'Hospital Fictício Central',
+    pacientes: [
+      { nome: 'João da Silva', idade: 45, diagnostico: 'Hipertensão', plano: 'Saúde Premium' },
+      { nome: 'Maria Oliveira', idade: 32, diagnostico: 'Diabetes tipo 2', plano: 'Saúde Básico' },
+      { nome: 'Pedro Santos', idade: 60, diagnostico: 'Cardiopatia', plano: 'Saúde Ouro' }
+    ],
+    medicos: [
+      { nome: 'Dr. Carlos Almeida', especialidade: 'Cardiologia' },
+      { nome: 'Dra. Fernanda Costa', especialidade: 'Endocrinologia' }
+    ]
+  });
+});
+
+// rota de ping
+app.get('/api/ping', (req, res) => {
+  res.json({ status: 'ok', reply: 'pong' });
+});
+
+// rota de erro simulado
+app.get('/api/error', (req, res) => {
+  res.status(500).json({ status: 'error', message: 'Erro simulado para teste' });
+});
+
+// rota de finanças fictícia
+app.get('/api/finance', (req, res) => {
+  res.json({
+    banco: 'Banco Fictício',
+    contas: [
+      { titular: 'Carlos Souza', saldo: 1500.75, moeda: 'BRL', tipo: 'Corrente' },
+      { titular: 'Ana Pereira', saldo: 3200.00, moeda: 'BRL', tipo: 'Poupança' },
+      { titular: 'José Lima', saldo: 850.50, moeda: 'USD', tipo: 'Investimento' }
+    ],
+    transacoesRecentes: [
+      { tipo: 'Depósito', valor: 500.00, data: '2026-10-10', origem: 'Caixa Eletrônico' },
+      { tipo: 'Transferência', valor: 200.00, data: '2026-10-11', destino: 'Conta Ana Pereira' },
+      { tipo: 'Pagamento', valor: 150.00, data: '2026-10-12', descricao: 'Conta de Luz' }
+    ]
+  });
+});
+
+// rota de cabeçalhos
+app.get('/api/headers', (req, res) => {
+  res.json({
+    headersRecebidos: req.headers,
+    ipCliente: req.ip
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
