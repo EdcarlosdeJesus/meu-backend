@@ -96,7 +96,7 @@ app.get('/', (req, res) => {
       🚀 API • Estudo Cequence • Discovery • Inventory • Threat Protection 🚀
     </marquee>
 
-    <h1>✨ API Cequence Study ✨</h1>
+    <h1>➡️ API Cequence Study ⬅️</h1>
 
     <div class="card">
 
@@ -227,7 +227,7 @@ app.get('/', (req, res) => {
     </div>
 
     <footer>
-      ✨ Projeto de Estudo Cequence • Criado por Ed Carlos ✨
+     🧑🏻‍💻 Projeto de Estudo Cequence • Criado por Ed Carlos 🧑🏻‍💻
     </footer>
 
   </body>
