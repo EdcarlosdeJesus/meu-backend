@@ -8,50 +8,232 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send(`
-    <html>
-      <head>
-        <title>API - Cequence Study</title>
-      </head>
-      <body style="font-family: Arial; background: linear-gradient(135deg, #1e90ff, #8a2be2); color: white; text-align: center; padding: 40px;">
+  <html>
+  <head>
+    <title>API - Cequence Study</title>
 
-        <marquee behavior="alternate" direction="left" scrollamount="10" style="font-size: 2em; color: #ffeb3b;">
-          🚀 API • Estudo Cequence 🚀
-        </marquee>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1e90ff, #8a2be2);
+        color: white;
+        text-align: center;
+        padding: 30px;
+      }
 
-        <h1>✨ Bem-vindo ✨</h1>
+      a {
+        color: #00BFFF;
+        font-weight: bold;
+        text-decoration: none;
+      }
 
-        <ul style="list-style:none;">
-          <li><a href="/api/test">/api/test</a></li>
-          <li><a href="/api/health">/api/health</a></li>
-          <li><a href="/api/ping">/api/ping</a></li>
-          <li><a href="/api/error">/api/error</a></li>
-          <li><a href="/api/finance">/api/finance</a></li>
-          <li><a href="/api/headers">/api/headers</a></li>
+      a:hover {
+        color: #87CEFA;
+        text-decoration: underline;
+      }
 
-          <hr>
+      h1 {
+        font-size: 3em;
+      }
 
-          <li><a href="/get">/get</a></li>
-          <li><a href="/headers">/headers</a></li>
-          <li><a href="/ip">/ip</a></li>
-          <li><a href="/user-agent">/user-agent</a></li>
-          <li><a href="/uuid">/uuid</a></li>
-          <li><a href="/status/200">/status/200</a></li>
-          <li><a href="/json">/json</a></li>
-          <li><a href="/anything">/anything</a></li>
+      h2 {
+        margin-top: 30px;
+        color: #FFD700;
+      }
 
-          <hr>
+      ul {
+        list-style: none;
+        padding: 0;
+      }
 
-          <li><a href="/api/customer">/api/customer</a></li>
-          <li><a href="/api/payment">/api/payment</a></li>
-          <li><a href="/api/login">/api/login</a></li>
-          <li><a href="/api/employee">/api/employee</a></li>
-        </ul>
+      li {
+        padding: 6px;
+      }
 
-      </body>
-    </html>
+      .get {
+        color: #00FF88;
+        font-weight: bold;
+      }
+
+      .post {
+        color: #FFD700;
+        font-weight: bold;
+      }
+
+      .put {
+        color: #FF66FF;
+        font-weight: bold;
+      }
+
+      .patch {
+        color: #FF9966;
+        font-weight: bold;
+      }
+
+      .delete {
+        color: #FF4444;
+        font-weight: bold;
+      }
+
+      .card {
+        background: rgba(255,255,255,0.08);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+      }
+
+      hr {
+        margin: 20px 0;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <marquee behavior="alternate" scrollamount="10">
+      🚀 API • Estudo Cequence • Discovery • Inventory • Threat Protection 🚀
+    </marquee>
+
+    <h1>✨ API Cequence Study ✨</h1>
+
+    <div class="card">
+
+      <h2>📘 API ORIGINAL</h2>
+
+      <ul>
+
+        <li><span class="get">GET</span> - Teste básico -
+          <a href="/api/test">/api/test</a>
+        </li>
+
+        <li><span class="get">GET</span> - Dados médicos fictícios -
+          <a href="/api/health">/api/health</a>
+        </li>
+
+        <li><span class="get">GET</span> - Teste de disponibilidade -
+          <a href="/api/ping">/api/ping</a>
+        </li>
+
+        <li><span class="get">GET</span> - Erro HTTP 500 controlado -
+          <a href="/api/error">/api/error</a>
+        </li>
+
+        <li><span class="get">GET</span> - Dados financeiros -
+          <a href="/api/finance">/api/finance</a>
+        </li>
+
+        <li><span class="get">GET</span> - Headers da requisição -
+          <a href="/api/headers">/api/headers</a>
+        </li>
+
+      </ul>
+
+      <hr>
+
+      <h2>🌐 HTTPBIN CLONE</h2>
+
+      <ul>
+
+        <li><span class="get">GET</span> -
+          Query String e Headers -
+          <a href="/get">/get</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          Headers recebidos -
+          <a href="/headers">/headers</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          Endereço IP -
+          <a href="/ip">/ip</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          User Agent -
+          <a href="/user-agent">/user-agent</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          UUID Aleatório -
+          <a href="/uuid">/uuid</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          Simulação de Status HTTP -
+          <a href="/status/200">/status/200</a>
+        </li>
+
+        <li><span class="get">GET</span> -
+          JSON de treinamento -
+          <a href="/json">/json</a>
+        </li>
+
+        <li>
+          <span class="get">GET</span>
+          <span class="post">POST</span>
+          <span class="put">PUT</span>
+          <span class="patch">PATCH</span>
+          <span class="delete">DELETE</span>
+          -
+          Captura qualquer payload -
+          <a href="/anything">/anything</a>
+        </li>
+
+      </ul>
+
+      <hr>
+
+      <h2>🔐 SENSITIVE DATA TESTS</h2>
+
+      <ul>
+
+        <li>
+          <span class="post">POST</span>
+          Cadastro de Cliente (CPF, Email, Telefone)
+          <br>
+          Endpoint:
+          <b>/api/customer</b>
+        </li>
+
+        <li>
+          <span class="post">POST</span>
+          Login e Autenticação
+          <br>
+          Endpoint:
+          <b>/api/login</b>
+        </li>
+
+        <li>
+          <span class="post">POST</span>
+          Dados Financeiros e Cartões
+          <br>
+          Endpoint:
+          <b>/api/payment</b>
+        </li>
+
+        <li>
+          <span class="post">POST</span>
+          Cadastro de Funcionários
+          <br>
+          Endpoint:
+          <b>/api/employee</b>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <footer>
+      ✨ Projeto de Estudo Cequence • Criado por Ed Carlos ✨
+    </footer>
+
+  </body>
+  </html>
   `);
 });
-
 /* ===========================
    API ORIGINAL
 =========================== */
