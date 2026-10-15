@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
 // Endereco publico de entrada da Cequence.
 // As chamadas do painel passam por este endereco.
-const CEQUENCE_BASE_URL = 'https://api.datacequencelab.dpdns.org';
+const CEQUENCE_BASE_URL = 'https://edge.datacequencelab.dpdns.org';
 
 // ==================================================
 // PAINEL HTTPBIN
