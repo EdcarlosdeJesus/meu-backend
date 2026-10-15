@@ -7,20 +7,26 @@
 </head>
 <body>
   <button id="enviar">Enviar</button>
+  <p id="resultado">Aguardando envio...</p>
 
   <script>
-    document.getElementById("enviar").addEventListener("click", async () => {
-      try { 
-        const resposta = await fetch(
-          "https://edge.datacequencelab.dpdns.org/anything"
-        );
+    const API_URL =
+      "https://edge.datacequencelab.dpdns.org/anything";
 
-        console.log("Status:", resposta.status);
-        console.log(await resposta.text());
+    document.getElementById("enviar").onclick = async () => {
+      const resultado = document.getElementById("resultado");
+      resultado.textContent = "Enviando requisição...";
+
+      try {
+        const resposta = await fetch(API_URL);
+        resultado.textContent =
+          "Resposta recebida. Status: " + resposta.status;
       } catch (erro) {
-        console.error("Erro:", erro);
+        resultado.textContent =
+          "Falha na requisição. Verifique o Console (F12).";
+        console.error(erro);
       }
-    });
+    };
   </script>
 </body>
 </html>
