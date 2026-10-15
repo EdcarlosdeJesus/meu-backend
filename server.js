@@ -10,7 +10,7 @@
 
   <script>
     document.getElementById("enviar").addEventListener("click", async () => {
-      try {
+      try { 
         const resposta = await fetch(
           "https://edge.datacequencelab.dpdns.org/anything"
         );
