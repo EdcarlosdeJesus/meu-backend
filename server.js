@@ -1,3 +1,4 @@
+
 const express = require('express');
 const crypto = require('crypto');
 
@@ -7,8 +8,12 @@ app.disable('x-powered-by');
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
+// Endereco publico de entrada da Cequence.
+// As chamadas do painel passam por este endereco.
+const CEQUENCE_BASE_URL = 'https://api.datacequencelab.dpdns.org';
+
 // ==================================================
-// PAGINA PRINCIPAL - HTTPBIN CEPQUENCE LAB
+// PAINEL HTTPBIN
 // ==================================================
 
 app.get('/', (req, res) => {
@@ -23,25 +28,20 @@ app.get('/', (req, res) => {
 :root {
   --background: #071329;
   --panel: #0c1c38;
-  --panel-light: #102544;
   --border: #1c5b9b;
   --blue: #087cf5;
-  --blue-light: #39baff;
   --text: #edf5ff;
   --muted: #9fc4f5;
   --input: #08172e;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: linear-gradient(135deg, #08172f, #061126);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font: 14px Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -77,9 +77,7 @@ h1 {
   letter-spacing: -1px;
 }
 
-h1 span {
-  color: #168cff;
-}
+h1 span { color: #168cff; }
 
 .subtitle {
   margin: 0;
@@ -116,9 +114,7 @@ h1 span {
   align-items: start;
 }
 
-.field {
-  min-width: 0;
-}
+.field { min-width: 0; }
 
 label {
   display: block;
@@ -127,9 +123,7 @@ label {
   font-weight: 600;
 }
 
-input,
-select,
-textarea {
+input, select, textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #245b92;
@@ -140,16 +134,12 @@ textarea {
   font: 14px Arial, sans-serif;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+input:focus, select:focus, textarea:focus {
   border-color: #20a6ff;
   box-shadow: 0 0 0 2px #168cff22;
 }
 
-select {
-  cursor: pointer;
-}
+select { cursor: pointer; }
 
 textarea {
   resize: vertical;
@@ -167,13 +157,8 @@ textarea {
   grid-row: 1 / 3;
 }
 
-.headers-field textarea {
-  min-height: 80px;
-}
-
-.body-field textarea {
-  min-height: 130px;
-}
+.headers-field textarea { min-height: 80px; }
+.body-field textarea { min-height: 130px; }
 
 .actions {
   display: flex;
@@ -192,7 +177,6 @@ button {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
 }
 
 button:hover {
@@ -207,20 +191,14 @@ button:disabled {
 
 .send-button {
   min-width: 238px;
-  border-color: #087cf5;
   background: linear-gradient(90deg, #087cf5, #0874eb);
-  font-size: 15px;
 }
 
-.send-button:hover {
-  background: #168cff;
-}
+.send-button:hover { background: #168cff; }
 
-.endpoint-button {
-  flex: 1 1 125px;
-}
+.endpoint-button { flex: 1 1 125px; }
 
-.endpoint-button .endpoint-icon {
+.endpoint-icon {
   margin-right: 8px;
   color: #36c8ff;
 }
@@ -279,7 +257,7 @@ button:disabled {
 
 .route-row {
   display: grid;
-  grid-template-columns: 76px minmax(100px, 0.65fr) minmax(150px, 1.5fr);
+  grid-template-columns: 76px minmax(100px, .65fr) minmax(150px, 1.5fr);
   align-items: center;
   gap: 12px;
   min-height: 40px;
@@ -295,7 +273,7 @@ button:disabled {
   min-height: 29px;
   padding: 5px 8px;
   border-radius: 8px;
-  color: #fff;
+  color: white;
   font-size: 12px;
   font-weight: bold;
 }
@@ -328,82 +306,30 @@ button:disabled {
 }
 
 @media (max-width: 900px) {
-  main {
-    padding: 18px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .body-field {
-    grid-column: 2;
-    grid-row: 1 / 3;
-  }
-
-  .headers-field {
-    grid-column: 1;
-  }
-
-  .routes-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
+  main { padding: 18px; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .body-field { grid-column: 2; grid-row: 1 / 3; }
+  .headers-field { grid-column: 1; }
+  .routes-grid { grid-template-columns: 1fr; gap: 0; }
 }
 
 @media (max-width: 600px) {
-  main {
-    padding: 12px;
-  }
-
-  header {
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .logo {
-    width: 44px;
-    height: 44px;
-    font-size: 23px;
-  }
-
-  .panel {
-    padding: 14px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .body-field,
-  .headers-field {
-    grid-column: 1;
-    grid-row: auto;
-  }
-
-  .send-button {
-    width: 100%;
-  }
-
-  .endpoint-button {
-    flex: 1 1 40%;
-  }
-
-  .route-row {
-    grid-template-columns: 65px 100px minmax(80px, 1fr);
-    gap: 8px;
-  }
-
-  .method-badge {
-    width: 62px;
-  }
+  main { padding: 12px; }
+  header { align-items: flex-start; gap: 12px; }
+  .logo { width: 44px; height: 44px; font-size: 23px; }
+  .panel { padding: 14px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .body-field, .headers-field { grid-column: 1; grid-row: auto; }
+  .send-button { width: 100%; }
+  .endpoint-button { flex: 1 1 40%; }
+  .route-row { grid-template-columns: 65px 100px minmax(80px, 1fr); gap: 8px; }
+  .method-badge { width: 62px; }
 }
 </style>
 </head>
 
 <body>
 <main>
-
 <header>
   <div class="logo">&lt;/&gt;</div>
   <div>
@@ -456,33 +382,13 @@ button:disabled {
   </div>
 
   <div class="actions">
-    <button id="send" class="send-button">
-      ➤ &nbsp; Enviar requisição
-    </button>
-
-    <button class="endpoint-button" data-path="/status/200">
-      <span class="endpoint-icon">↗</span> /status/200
-    </button>
-
-    <button class="endpoint-button" data-path="/headers">
-      <span class="endpoint-icon">⊙</span> /headers
-    </button>
-
-    <button class="endpoint-button" data-path="/ip">
-      <span class="endpoint-icon">●</span> /ip
-    </button>
-
-    <button class="endpoint-button" data-path="/user-agent">
-      <span class="endpoint-icon">♙</span> /user-agent
-    </button>
-
-    <button class="endpoint-button" data-path="/uuid">
-      <span class="endpoint-icon">⬡</span> /uuid
-    </button>
-
-    <button class="endpoint-button" data-path="/json">
-      <span class="endpoint-icon">{ }</span> /json
-    </button>
+    <button id="send" class="send-button">➤ &nbsp; Enviar requisição</button>
+    <button class="endpoint-button" data-path="/status/200">↗ /status/200</button>
+    <button class="endpoint-button" data-path="/headers">⊙ /headers</button>
+    <button class="endpoint-button" data-path="/ip">● /ip</button>
+    <button class="endpoint-button" data-path="/user-agent">♙ /user-agent</button>
+    <button class="endpoint-button" data-path="/uuid">⬡ /uuid</button>
+    <button class="endpoint-button" data-path="/json">{ } /json</button>
   </div>
 
   <div class="response-box">
@@ -490,7 +396,6 @@ button:disabled {
       <h3><span class="panel-icon">▣</span> &nbsp; Resposta</h3>
       <button id="copy" title="Copiar resposta">▢</button>
     </div>
-
     <p id="status" role="status">Aguardando requisição.</p>
     <pre id="result">A resposta aparecerá aqui.</pre>
   </div>
@@ -504,80 +409,32 @@ button:disabled {
 
   <div class="routes-grid">
     <div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/get</span>
-        <span class="route-description">Consulta parâmetros e cabeçalhos</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge post">POST</span>
-        <span class="route-path">/post</span>
-        <span class="route-description">Testa envio de dados</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge put">PUT</span>
-        <span class="route-path">/put</span>
-        <span class="route-description">Testa atualização por PUT</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge patch">PATCH</span>
-        <span class="route-path">/patch</span>
-        <span class="route-description">Testa atualização parcial</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge delete">DELETE</span>
-        <span class="route-path">/delete</span>
-        <span class="route-description">Testa requisições DELETE</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge all">ALL</span>
-        <span class="route-path">/anything</span>
-        <span class="route-description">Aceita qualquer método HTTP</span>
-      </div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/get</span><span class="route-description">Consulta parâmetros e cabeçalhos</span></div>
+      <div class="route-row"><span class="method-badge post">POST</span><span class="route-path">/post</span><span class="route-description">Testa envio de dados</span></div>
+      <div class="route-row"><span class="method-badge put">PUT</span><span class="route-path">/put</span><span class="route-description">Testa atualização por PUT</span></div>
+      <div class="route-row"><span class="method-badge patch">PATCH</span><span class="route-path">/patch</span><span class="route-description">Testa atualização parcial</span></div>
+      <div class="route-row"><span class="method-badge delete">DELETE</span><span class="route-path">/delete</span><span class="route-description">Testa requisições DELETE</span></div>
+      <div class="route-row"><span class="method-badge all">ALL</span><span class="route-path">/anything</span><span class="route-description">Aceita qualquer método HTTP</span></div>
     </div>
 
     <div>
-      <div class="route-row">
-        <span class="method-badge all">ALL</span>
-        <span class="route-path">/status/:code</span>
-        <span class="route-description">Retorna o código HTTP informado</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/headers</span>
-        <span class="route-description">Exibe os cabeçalhos recebidos</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/ip</span>
-        <span class="route-description">Informa o IP observado pelo servidor</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/user-agent</span>
-        <span class="route-description">Exibe o User-Agent</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/uuid</span>
-        <span class="route-description">Gera um UUID</span>
-      </div>
-      <div class="route-row">
-        <span class="method-badge get">GET</span>
-        <span class="route-path">/json</span>
-        <span class="route-description">Retorna um exemplo JSON</span>
-      </div>
+      <div class="route-row"><span class="method-badge all">ALL</span><span class="route-path">/status/:code</span><span class="route-description">Retorna o código HTTP informado</span></div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/headers</span><span class="route-description">Exibe os cabeçalhos recebidos</span></div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/ip</span><span class="route-description">Informa o IP observado pelo servidor</span></div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/user-agent</span><span class="route-description">Exibe o User-Agent</span></div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/uuid</span><span class="route-description">Gera um UUID</span></div>
+      <div class="route-row"><span class="method-badge get">GET</span><span class="route-path">/json</span><span class="route-description">Retorna um exemplo JSON</span></div>
     </div>
   </div>
 </section>
 
-<div class="footer">
-  HTTPBin - Cequence Lab · Ambiente de testes de API
-</div>
-
+<div class="footer">HTTPBin - Cequence Lab · Ambiente de testes de API</div>
 </main>
 
 <script>
+// O painel chama a entrada da Cequence, nao o backend diretamente.
+const CEQUENCE_BASE_URL = 'https://api.datacequencelab.dpdns.org';
+
 const methodEl = document.getElementById('method');
 const pathEl = document.getElementById('path');
 const bodyEl = document.getElementById('body');
@@ -594,11 +451,7 @@ async function sendRequest() {
     headers = JSON.parse(headersEl.value || '{}');
     body = JSON.parse(bodyEl.value || '{}');
 
-    if (
-      !headers ||
-      Array.isArray(headers) ||
-      typeof headers !== 'object'
-    ) {
+    if (!headers || Array.isArray(headers) || typeof headers !== 'object') {
       throw new Error('Os cabeçalhos precisam ser um objeto JSON.');
     }
   } catch (error) {
@@ -609,9 +462,9 @@ async function sendRequest() {
 
   const path = pathEl.value.trim();
 
-  if (!path.startsWith('/')) {
+  if (!path.startsWith('/') || path.startsWith('//')) {
     statusEl.textContent = 'Caminho inválido';
-    resultEl.textContent = 'Informe um caminho iniciado por /.';
+    resultEl.textContent = 'Informe um caminho iniciado por uma única barra /.';
     return;
   }
 
@@ -633,28 +486,28 @@ async function sendRequest() {
   }
 
   sendButton.disabled = true;
-  statusEl.textContent = 'Enviando requisição...';
-  resultEl.textContent = 'Aguardando resposta da API...';
+  statusEl.textContent = 'Enviando requisição pela Cequence...';
+  resultEl.textContent = 'Aguardando resposta...';
 
   try {
-    const response = await fetch(path, options);
+    // Importante: o destino e o path sao combinados para passar
+    // pela entrada publica da Cequence.
+    const targetUrl = new URL(path, CEQUENCE_BASE_URL);
+    const response = await fetch(targetUrl.toString(), options);
     const text = await response.text();
 
-    statusEl.textContent =
-      'HTTP ' + response.status + ' ' + response.statusText;
+    statusEl.textContent = 'HTTP ' + response.status + ' ' + response.statusText;
 
     try {
-      resultEl.textContent = JSON.stringify(
-        JSON.parse(text),
-        null,
-        2
-      );
+      resultEl.textContent = JSON.stringify(JSON.parse(text), null, 2);
     } catch {
       resultEl.textContent = text;
     }
   } catch (error) {
     statusEl.textContent = 'Falha na requisição';
-    resultEl.textContent = error.message;
+    resultEl.textContent =
+      error.message +
+      '\\n\\nSe aparecer um erro de CORS, verifique a política CORS da entrada da Cequence.';
   } finally {
     sendButton.disabled = false;
   }
@@ -662,7 +515,6 @@ async function sendRequest() {
 
 sendButton.addEventListener('click', sendRequest);
 
-// Os atalhos selecionam o endpoint e usam GET.
 document.querySelectorAll('button[data-path]').forEach(button => {
   button.addEventListener('click', () => {
     pathEl.value = button.dataset.path;
@@ -671,12 +523,9 @@ document.querySelectorAll('button[data-path]').forEach(button => {
   });
 });
 
-// Copiar a resposta exibida.
 document.getElementById('copy').addEventListener('click', async () => {
-  const text = resultEl.textContent;
-
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(resultEl.textContent);
     statusEl.textContent += ' · Resposta copiada';
   } catch {
     statusEl.textContent += ' · Não foi possível copiar automaticamente';
@@ -688,7 +537,7 @@ document.getElementById('copy').addEventListener('click', async () => {
 });
 
 // ==================================================
-// ENDPOINTS HTTPBIN
+// ENDPOINTS HTTPBIN NO BACKEND
 // ==================================================
 
 function echoRequest(req, res) {
@@ -713,7 +562,6 @@ app.delete('/delete', echoRequest);
 
 app.all('/anything', echoRequest);
 
-// Respostas HTTP configuráveis.
 app.all('/status/:code', (req, res) => {
   const code = Number(req.params.code);
 
@@ -729,17 +577,12 @@ app.all('/status/:code', (req, res) => {
   });
 });
 
-// Endpoints informativos.
 app.get('/headers', (req, res) => {
-  res.json({
-    headers: req.headers
-  });
+  res.json({ headers: req.headers });
 });
 
 app.get('/ip', (req, res) => {
-  res.json({
-    origin: req.ip
-  });
+  res.json({ origin: req.ip });
 });
 
 app.get('/user-agent', (req, res) => {
@@ -749,9 +592,7 @@ app.get('/user-agent', (req, res) => {
 });
 
 app.get('/uuid', (req, res) => {
-  res.json({
-    uuid: crypto.randomUUID()
-  });
+  res.json({ uuid: crypto.randomUUID() });
 });
 
 app.get('/json', (req, res) => {
@@ -767,7 +608,7 @@ app.get('/json', (req, res) => {
 });
 
 // ==================================================
-// ERROS E ROTAS INEXISTENTES
+// ERROS
 // ==================================================
 
 app.use((req, res) => {
@@ -781,20 +622,16 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('HTTPBin error:', err.message);
 
-  if (res.headersSent) {
-    return next(err);
-  }
+  if (res.headersSent) return next(err);
 
   const status = err.status || err.statusCode || 500;
 
   res.status(status).json({
-    error: status === 500
-      ? 'Internal Server Error'
-      : err.message
+    error: status === 500 ? 'Internal Server Error' : err.message
   });
 });
 
-// Compatibilidade com Vercel e execução local.
+// Vercel e execucao local.
 if (require.main === module) {
   const port = process.env.PORT || 8080;
 
