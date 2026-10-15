@@ -7,7 +7,7 @@ app.disable('x-powered-by');
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
-// Painel para testar requisicoes HTTP.
+// Painel principal do laboratorio.
 app.get('/', (req, res) => {
   res.type('html').send(`<!doctype html>
 <html lang="pt-BR">
@@ -26,7 +26,7 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #40516b;border-ra
 textarea{min-height:100px;font-family:monospace}
 button{padding:10px 14px;margin:8px 6px 0 0;border:0;border-radius:7px;background:#3779e8;color:#fff;cursor:pointer}
 button:hover{background:#255fc1}
-.quick{background:#30415b}
+.quick{background:#30415b;border:1px solid #405b80}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b1220;padding:14px;border-radius:8px;min-height:100px}
 .small{font-size:13px;color:#9eacc1}
 code{color:#9bc1ff}
@@ -59,12 +59,12 @@ code{color:#9bc1ff}
 <textarea id="headers">{"Content-Type":"application/json","X-Lab-Test":"cequence"}</textarea>
 
 <button id="send">Enviar requisicao</button>
-<button class="quick" data-path="/get" data-method="GET">GET</button>
-<button class="quick" data-path="/post" data-method="POST">POST</button>
-<button class="quick" data-path="/put" data-method="PUT">PUT</button>
-<button class="quick" data-path="/patch" data-method="PATCH">PATCH</button>
-<button class="quick" data-path="/delete" data-method="DELETE">DELETE</button>
-<button class="quick" data-path="/anything" data-method="POST">ANYTHING</button>
+<button class="quick" data-path="/status/200">/status/200</button>
+<button class="quick" data-path="/headers">/headers</button>
+<button class="quick" data-path="/ip">/ip</button>
+<button class="quick" data-path="/user-agent">/user-agent</button>
+<button class="quick" data-path="/uuid">/uuid</button>
+<button class="quick" data-path="/json">/json</button>
 
 <h3>Resposta</h3>
 <p id="status" class="small">Aguardando requisicao.</p>
@@ -113,12 +113,18 @@ async function sendRequest() {
   }
 
   const method = methodEl.value;
-  const options = { method, headers };
+  const options = {
+    method,
+    headers: { ...headers }
+  };
 
   if (!['GET', 'HEAD'].includes(method)) {
     options.body = JSON.stringify(body);
-    if (!Object.keys(headers).some(h => h.toLowerCase() === 'content-type')) {
-      headers['Content-Type'] = 'application/json';
+
+    if (!Object.keys(options.headers).some(
+      key => key.toLowerCase() === 'content-type'
+    )) {
+      options.headers['Content-Type'] = 'application/json';
     }
   }
 
@@ -128,7 +134,8 @@ async function sendRequest() {
     const response = await fetch(pathEl.value, options);
     const text = await response.text();
 
-    statusEl.textContent = 'HTTP ' + response.status + ' ' + response.statusText;
+    statusEl.textContent =
+      'HTTP ' + response.status + ' ' + response.statusText;
 
     try {
       resultEl.textContent = JSON.stringify(JSON.parse(text), null, 2);
@@ -146,7 +153,6 @@ document.getElementById('send').addEventListener('click', sendRequest);
 document.querySelectorAll('button[data-path]').forEach(button => {
   button.addEventListener('click', () => {
     pathEl.value = button.dataset.path;
-    methodEl.value = button.dataset.method;
     sendRequest();
   });
 });
@@ -156,31 +162,32 @@ document.querySelectorAll('button[data-path]').forEach(button => {
 </html>`);
 });
 
-// Funcao comum para refletir os detalhes da requisicao.
+// Reflete os detalhes da requisicao recebida.
 function echoRequest(req, res) {
   res.json({
     method: req.method,
     url: req.originalUrl,
     headers: req.headers,
     args: req.query,
-    json: req.body && Object.keys(req.body).length ? req.body : null,
-    data: typeof req.body === 'string' ? req.body : '',
+    json: req.body && Object.keys(req.body).length
+      ? req.body
+      : null,
     origin: req.ip,
     timestamp: new Date().toISOString()
   });
 }
 
-// Rotas HTTPBin para cada metodo.
+// Endpoints HTTPBin para os diferentes metodos.
 app.get('/get', echoRequest);
 app.post('/post', echoRequest);
 app.put('/put', echoRequest);
 app.patch('/patch', echoRequest);
 app.delete('/delete', echoRequest);
 
-// Aceita qualquer metodo nesta rota.
+// Aceita qualquer metodo HTTP.
 app.all('/anything', echoRequest);
 
-// Resposta com codigo HTTP escolhido.
+// Retorna o codigo HTTP solicitado.
 app.all('/status/:code', (req, res) => {
   const code = Number(req.params.code);
 
@@ -196,7 +203,7 @@ app.all('/status/:code', (req, res) => {
   });
 });
 
-// Utilitarios HTTPBin.
+// Endpoints informativos.
 app.get('/headers', (req, res) => {
   res.json({ headers: req.headers });
 });
@@ -206,7 +213,9 @@ app.get('/ip', (req, res) => {
 });
 
 app.get('/user-agent', (req, res) => {
-  res.json({ 'user-agent': req.get('user-agent') || '' });
+  res.json({
+    'user-agent': req.get('user-agent') || ''
+  });
 });
 
 app.get('/uuid', (req, res) => {
@@ -225,7 +234,7 @@ app.get('/json', (req, res) => {
   });
 });
 
-// Rota inexistente.
+// Resposta para rotas inexistentes.
 app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
@@ -234,7 +243,7 @@ app.use((req, res) => {
   });
 });
 
-// Tratamento de erros.
+// Tratamento centralizado de erros.
 app.use((err, req, res, next) => {
   console.error('HTTPBin error:', err.message);
 
@@ -245,7 +254,9 @@ app.use((err, req, res, next) => {
   const status = err.status || err.statusCode || 500;
 
   res.status(status).json({
-    error: status === 500 ? 'Internal Server Error' : err.message
+    error: status === 500
+      ? 'Internal Server Error'
+      : err.message
   });
 });
 
