@@ -7,85 +7,575 @@ app.disable('x-powered-by');
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
-// Painel principal do laboratorio.
+// ==================================================
+// PAGINA PRINCIPAL - HTTPBIN CEPQUENCE LAB
+// ==================================================
+
 app.get('/', (req, res) => {
-  res.type('html').send(`<!doctype html>
+  res.type('html').send(`<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HTTPBin - Cequence Lab</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101827;color:#e8eef8;font:15px Arial,sans-serif}
-main{max-width:1000px;margin:auto;padding:24px}
-.panel{background:#192538;border:1px solid #30415b;border-radius:12px;padding:18px;margin:18px 0}
-p{color:#aebbd0;line-height:1.5}
-label{display:block;margin:12px 0 6px;color:#cbd7e8}
-input,select,textarea{width:100%;padding:11px;border:1px solid #40516b;border-radius:7px;background:#0e1726;color:#fff}
-textarea{min-height:100px;font-family:monospace}
-button{padding:10px 14px;margin:8px 6px 0 0;border:0;border-radius:7px;background:#3779e8;color:#fff;cursor:pointer}
-button:hover{background:#255fc1}
-.quick{background:#30415b;border:1px solid #405b80}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b1220;padding:14px;border-radius:8px;min-height:100px}
-.small{font-size:13px;color:#9eacc1}
-code{color:#9bc1ff}
+:root {
+  --background: #071329;
+  --panel: #0c1c38;
+  --panel-light: #102544;
+  --border: #1c5b9b;
+  --blue: #087cf5;
+  --blue-light: #39baff;
+  --text: #edf5ff;
+  --muted: #9fc4f5;
+  --input: #08172e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #08172f, #061126);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+main {
+  width: min(1500px, 100%);
+  margin: auto;
+  padding: 24px 28px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #124b91;
+  color: #35d1ff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+h1 {
+  margin: 0 0 5px;
+  font-size: clamp(24px, 3vw, 38px);
+  letter-spacing: -1px;
+}
+
+h1 span {
+  color: #168cff;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.panel {
+  margin-bottom: 18px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(140deg, #0c203f, #091a34);
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+  font-size: 19px;
+}
+
+.panel-icon {
+  color: #29c9ff;
+  font-size: 23px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.2fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.field {
+  min-width: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 7px;
+  color: #e3efff;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #245b92;
+  border-radius: 8px;
+  outline: none;
+  background: var(--input);
+  color: white;
+  font: 14px Arial, sans-serif;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #20a6ff;
+  box-shadow: 0 0 0 2px #168cff22;
+}
+
+select {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 130px;
+  font-family: Consolas, Monaco, monospace;
+  line-height: 1.5;
+}
+
+.headers-field {
+  grid-column: 1 / 3;
+}
+
+.body-field {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.headers-field textarea {
+  min-height: 80px;
+}
+
+.body-field textarea {
+  min-height: 130px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+button {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #1767ad;
+  border-radius: 8px;
+  background: #10294b;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+button:hover {
+  background: #174373;
+  border-color: #37baff;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.send-button {
+  min-width: 238px;
+  border-color: #087cf5;
+  background: linear-gradient(90deg, #087cf5, #0874eb);
+  font-size: 15px;
+}
+
+.send-button:hover {
+  background: #168cff;
+}
+
+.endpoint-button {
+  flex: 1 1 125px;
+}
+
+.endpoint-button .endpoint-icon {
+  margin-right: 8px;
+  color: #36c8ff;
+}
+
+.response-box {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #18538b;
+  border-radius: 9px;
+  background: #091a34;
+}
+
+.response-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.response-heading h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.response-heading button {
+  min-height: 32px;
+  padding: 5px 10px;
+}
+
+#status {
+  margin: 10px 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+#result {
+  min-height: 105px;
+  max-height: 480px;
+  overflow: auto;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #1b4779;
+  border-radius: 8px;
+  background: #06142a;
+  color: #9fc5ff;
+  font: 13px/1.6 Consolas, Monaco, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.routes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.route-row {
+  display: grid;
+  grid-template-columns: 76px minmax(100px, 0.65fr) minmax(150px, 1.5fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 5px 0;
+  border-bottom: 1px solid #183456;
+}
+
+.method-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  min-height: 29px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.get { background: #00d69a; color: #06291e; }
+.post { background: #087cf5; }
+.put { background: #7924e9; }
+.patch { background: #ff9c13; color: #241500; }
+.delete { background: #f32748; }
+.all { background: #203b65; border: 1px solid #7699ca; }
+
+.route-path {
+  color: #e8f2ff;
+  font-family: Consolas, Monaco, monospace;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.route-description {
+  color: #a5c9f6;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.footer {
+  padding: 5px 0 10px;
+  color: #7397c3;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  main {
+    padding: 18px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .body-field {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  .headers-field {
+    grid-column: 1;
+  }
+
+  .routes-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 12px;
+  }
+
+  header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .logo {
+    width: 44px;
+    height: 44px;
+    font-size: 23px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .body-field,
+  .headers-field {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .send-button {
+    width: 100%;
+  }
+
+  .endpoint-button {
+    flex: 1 1 40%;
+  }
+
+  .route-row {
+    grid-template-columns: 65px 100px minmax(80px, 1fr);
+    gap: 8px;
+  }
+
+  .method-badge {
+    width: 62px;
+  }
+}
 </style>
 </head>
+
 <body>
 <main>
-<h1>HTTPBin - Cequence Lab</h1>
-<p>Laboratorio para testar metodos HTTP, cabecalhos, parametros, respostas e corpos de requisicao.</p>
+
+<header>
+  <div class="logo">&lt;/&gt;</div>
+  <div>
+    <h1>HTTPBin <span>- Cequence Lab</span></h1>
+    <p class="subtitle">
+      Laboratório para testar métodos HTTP, cabeçalhos, parâmetros,
+      respostas e corpos de requisição.
+    </p>
+  </div>
+</header>
 
 <section class="panel">
-<h2>Testador de requisicoes</h2>
+  <h2 class="panel-title">
+    <span class="panel-icon">▣</span>
+    Testador de requisições
+  </h2>
 
-<label for="method">Metodo HTTP</label>
-<select id="method">
-<option>GET</option>
-<option>POST</option>
-<option>PUT</option>
-<option>PATCH</option>
-<option>DELETE</option>
-</select>
+  <div class="form-grid">
+    <div class="field">
+      <label for="method">Método HTTP</label>
+      <select id="method">
+        <option>GET</option>
+        <option>POST</option>
+        <option>PUT</option>
+        <option>PATCH</option>
+        <option>DELETE</option>
+      </select>
+    </div>
 
-<label for="path">Caminho da rota</label>
-<input id="path" value="/get" placeholder="/get">
+    <div class="field">
+      <label for="path">Caminho da rota</label>
+      <input id="path" value="/get" placeholder="/get">
+    </div>
 
-<label for="body">Corpo JSON</label>
-<textarea id="body">{"message":"Cequence API test","value":123}</textarea>
+    <div class="field body-field">
+      <label for="body">Corpo JSON</label>
+      <textarea id="body">{
+  "message": "Cequence API test",
+  "value": 123
+}</textarea>
+    </div>
 
-<label for="headers">Cabecalhos adicionais (JSON)</label>
-<textarea id="headers">{"Content-Type":"application/json","X-Lab-Test":"cequence"}</textarea>
+    <div class="field headers-field">
+      <label for="headers">Cabeçalhos adicionais (JSON)</label>
+      <textarea id="headers">{
+  "Content-Type": "application/json",
+  "X-Lab-Test": "cequence"
+}</textarea>
+    </div>
+  </div>
 
-<button id="send">Enviar requisicao</button>
-<button class="quick" data-path="/status/200">/status/200</button>
-<button class="quick" data-path="/headers">/headers</button>
-<button class="quick" data-path="/ip">/ip</button>
-<button class="quick" data-path="/user-agent">/user-agent</button>
-<button class="quick" data-path="/uuid">/uuid</button>
-<button class="quick" data-path="/json">/json</button>
+  <div class="actions">
+    <button id="send" class="send-button">
+      ➤ &nbsp; Enviar requisição
+    </button>
 
-<h3>Resposta</h3>
-<p id="status" class="small">Aguardando requisicao.</p>
-<pre id="result">A resposta aparecera aqui.</pre>
+    <button class="endpoint-button" data-path="/status/200">
+      <span class="endpoint-icon">↗</span> /status/200
+    </button>
+
+    <button class="endpoint-button" data-path="/headers">
+      <span class="endpoint-icon">⊙</span> /headers
+    </button>
+
+    <button class="endpoint-button" data-path="/ip">
+      <span class="endpoint-icon">●</span> /ip
+    </button>
+
+    <button class="endpoint-button" data-path="/user-agent">
+      <span class="endpoint-icon">♙</span> /user-agent
+    </button>
+
+    <button class="endpoint-button" data-path="/uuid">
+      <span class="endpoint-icon">⬡</span> /uuid
+    </button>
+
+    <button class="endpoint-button" data-path="/json">
+      <span class="endpoint-icon">{ }</span> /json
+    </button>
+  </div>
+
+  <div class="response-box">
+    <div class="response-heading">
+      <h3><span class="panel-icon">▣</span> &nbsp; Resposta</h3>
+      <button id="copy" title="Copiar resposta">▢</button>
+    </div>
+
+    <p id="status" role="status">Aguardando requisição.</p>
+    <pre id="result">A resposta aparecerá aqui.</pre>
+  </div>
 </section>
 
 <section class="panel">
-<h2>Rotas HTTPBin disponiveis</h2>
-<p><code>GET /get</code> - consulta parametros e cabecalhos</p>
-<p><code>POST /post</code> - testa envio de dados</p>
-<p><code>PUT /put</code> - testa atualizacao por PUT</p>
-<p><code>PATCH /patch</code> - testa atualizacao parcial</p>
-<p><code>DELETE /delete</code> - testa requisicoes DELETE</p>
-<p><code>ALL /anything</code> - aceita qualquer metodo HTTP</p>
-<p><code>ALL /status/:code</code> - retorna o codigo HTTP informado</p>
-<p><code>GET /headers</code> - exibe os cabecalhos recebidos</p>
-<p><code>GET /ip</code> - informa o IP observado pelo servidor</p>
-<p><code>GET /user-agent</code> - exibe o User-Agent</p>
-<p><code>GET /uuid</code> - gera um UUID</p>
-<p><code>GET /json</code> - retorna um exemplo JSON</p>
+  <h2 class="panel-title">
+    <span class="panel-icon">☷</span>
+    Rotas HTTPBin disponíveis
+  </h2>
+
+  <div class="routes-grid">
+    <div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/get</span>
+        <span class="route-description">Consulta parâmetros e cabeçalhos</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge post">POST</span>
+        <span class="route-path">/post</span>
+        <span class="route-description">Testa envio de dados</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge put">PUT</span>
+        <span class="route-path">/put</span>
+        <span class="route-description">Testa atualização por PUT</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge patch">PATCH</span>
+        <span class="route-path">/patch</span>
+        <span class="route-description">Testa atualização parcial</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge delete">DELETE</span>
+        <span class="route-path">/delete</span>
+        <span class="route-description">Testa requisições DELETE</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge all">ALL</span>
+        <span class="route-path">/anything</span>
+        <span class="route-description">Aceita qualquer método HTTP</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="route-row">
+        <span class="method-badge all">ALL</span>
+        <span class="route-path">/status/:code</span>
+        <span class="route-description">Retorna o código HTTP informado</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/headers</span>
+        <span class="route-description">Exibe os cabeçalhos recebidos</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/ip</span>
+        <span class="route-description">Informa o IP observado pelo servidor</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/user-agent</span>
+        <span class="route-description">Exibe o User-Agent</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/uuid</span>
+        <span class="route-description">Gera um UUID</span>
+      </div>
+      <div class="route-row">
+        <span class="method-badge get">GET</span>
+        <span class="route-path">/json</span>
+        <span class="route-description">Retorna um exemplo JSON</span>
+      </div>
+    </div>
+  </div>
 </section>
+
+<div class="footer">
+  HTTPBin - Cequence Lab · Ambiente de testes de API
+</div>
+
+</main>
 
 <script>
 const methodEl = document.getElementById('method');
@@ -94,6 +584,7 @@ const bodyEl = document.getElementById('body');
 const headersEl = document.getElementById('headers');
 const resultEl = document.getElementById('result');
 const statusEl = document.getElementById('status');
+const sendButton = document.getElementById('send');
 
 async function sendRequest() {
   let headers;
@@ -103,12 +594,24 @@ async function sendRequest() {
     headers = JSON.parse(headersEl.value || '{}');
     body = JSON.parse(bodyEl.value || '{}');
 
-    if (!headers || Array.isArray(headers) || typeof headers !== 'object') {
-      throw new Error('Os cabecalhos precisam ser um objeto JSON.');
+    if (
+      !headers ||
+      Array.isArray(headers) ||
+      typeof headers !== 'object'
+    ) {
+      throw new Error('Os cabeçalhos precisam ser um objeto JSON.');
     }
   } catch (error) {
-    statusEl.textContent = 'Erro de configuracao';
+    statusEl.textContent = 'Erro de configuração';
     resultEl.textContent = error.message;
+    return;
+  }
+
+  const path = pathEl.value.trim();
+
+  if (!path.startsWith('/')) {
+    statusEl.textContent = 'Caminho inválido';
+    resultEl.textContent = 'Informe um caminho iniciado por /.';
     return;
   }
 
@@ -121,79 +624,102 @@ async function sendRequest() {
   if (!['GET', 'HEAD'].includes(method)) {
     options.body = JSON.stringify(body);
 
-    if (!Object.keys(options.headers).some(
-      key => key.toLowerCase() === 'content-type'
-    )) {
+    const hasContentType = Object.keys(options.headers)
+      .some(key => key.toLowerCase() === 'content-type');
+
+    if (!hasContentType) {
       options.headers['Content-Type'] = 'application/json';
     }
   }
 
-  resultEl.textContent = 'Enviando requisicao...';
+  sendButton.disabled = true;
+  statusEl.textContent = 'Enviando requisição...';
+  resultEl.textContent = 'Aguardando resposta da API...';
 
   try {
-    const response = await fetch(pathEl.value, options);
+    const response = await fetch(path, options);
     const text = await response.text();
 
     statusEl.textContent =
       'HTTP ' + response.status + ' ' + response.statusText;
 
     try {
-      resultEl.textContent = JSON.stringify(JSON.parse(text), null, 2);
+      resultEl.textContent = JSON.stringify(
+        JSON.parse(text),
+        null,
+        2
+      );
     } catch {
       resultEl.textContent = text;
     }
   } catch (error) {
-    statusEl.textContent = 'Falha na requisicao';
+    statusEl.textContent = 'Falha na requisição';
     resultEl.textContent = error.message;
+  } finally {
+    sendButton.disabled = false;
   }
 }
 
-document.getElementById('send').addEventListener('click', sendRequest);
+sendButton.addEventListener('click', sendRequest);
 
+// Os atalhos selecionam o endpoint e usam GET.
 document.querySelectorAll('button[data-path]').forEach(button => {
   button.addEventListener('click', () => {
     pathEl.value = button.dataset.path;
+    methodEl.value = 'GET';
     sendRequest();
   });
 });
+
+// Copiar a resposta exibida.
+document.getElementById('copy').addEventListener('click', async () => {
+  const text = resultEl.textContent;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    statusEl.textContent += ' · Resposta copiada';
+  } catch {
+    statusEl.textContent += ' · Não foi possível copiar automaticamente';
+  }
+});
 </script>
-</main>
 </body>
 </html>`);
 });
 
-// Reflete os detalhes da requisicao recebida.
+// ==================================================
+// ENDPOINTS HTTPBIN
+// ==================================================
+
 function echoRequest(req, res) {
+  const body = req.body;
+
   res.json({
     method: req.method,
     url: req.originalUrl,
     headers: req.headers,
     args: req.query,
-    json: req.body && Object.keys(req.body).length
-      ? req.body
-      : null,
+    json: body && Object.keys(body).length ? body : null,
     origin: req.ip,
     timestamp: new Date().toISOString()
   });
 }
 
-// Endpoints HTTPBin para os diferentes metodos.
 app.get('/get', echoRequest);
 app.post('/post', echoRequest);
 app.put('/put', echoRequest);
 app.patch('/patch', echoRequest);
 app.delete('/delete', echoRequest);
 
-// Aceita qualquer metodo HTTP.
 app.all('/anything', echoRequest);
 
-// Retorna o codigo HTTP solicitado.
+// Respostas HTTP configuráveis.
 app.all('/status/:code', (req, res) => {
   const code = Number(req.params.code);
 
   if (!Number.isInteger(code) || code < 100 || code > 599) {
     return res.status(400).json({
-      error: 'Codigo HTTP invalido. Informe um valor entre 100 e 599.'
+      error: 'Código HTTP inválido. Informe um valor entre 100 e 599.'
     });
   }
 
@@ -205,11 +731,15 @@ app.all('/status/:code', (req, res) => {
 
 // Endpoints informativos.
 app.get('/headers', (req, res) => {
-  res.json({ headers: req.headers });
+  res.json({
+    headers: req.headers
+  });
 });
 
 app.get('/ip', (req, res) => {
-  res.json({ origin: req.ip });
+  res.json({
+    origin: req.ip
+  });
 });
 
 app.get('/user-agent', (req, res) => {
@@ -219,7 +749,9 @@ app.get('/user-agent', (req, res) => {
 });
 
 app.get('/uuid', (req, res) => {
-  res.json({ uuid: crypto.randomUUID() });
+  res.json({
+    uuid: crypto.randomUUID()
+  });
 });
 
 app.get('/json', (req, res) => {
@@ -234,7 +766,10 @@ app.get('/json', (req, res) => {
   });
 });
 
-// Resposta para rotas inexistentes.
+// ==================================================
+// ERROS E ROTAS INEXISTENTES
+// ==================================================
+
 app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
@@ -243,7 +778,6 @@ app.use((req, res) => {
   });
 });
 
-// Tratamento centralizado de erros.
 app.use((err, req, res, next) => {
   console.error('HTTPBin error:', err.message);
 
@@ -260,7 +794,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Execucao local e exportacao para o Vercel.
+// Compatibilidade com Vercel e execução local.
 if (require.main === module) {
   const port = process.env.PORT || 8080;
 
