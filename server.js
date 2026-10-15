@@ -8,9 +8,9 @@ app.disable('x-powered-by');
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
-// Endereco publico de entrada da Cequence.
-// As chamadas do painel passam por este endereco.
-const CEQUENCE_BASE_URL = 'https://edge.datacequencelab.dpdns.org';
+// Entrada protegida pela Cequence.
+const CEQUENCE_BASE_URL =
+  'https://edge.datacequencelab.dpdns.org';
 
 // ==================================================
 // PAINEL HTTPBIN
@@ -195,13 +195,7 @@ button:disabled {
 }
 
 .send-button:hover { background: #168cff; }
-
 .endpoint-button { flex: 1 1 125px; }
-
-.endpoint-icon {
-  margin-right: 8px;
-  color: #36c8ff;
-}
 
 .response-box {
   margin-top: 18px;
@@ -319,10 +313,16 @@ button:disabled {
   .logo { width: 44px; height: 44px; font-size: 23px; }
   .panel { padding: 14px; }
   .form-grid { grid-template-columns: 1fr; }
-  .body-field, .headers-field { grid-column: 1; grid-row: auto; }
+  .body-field, .headers-field {
+    grid-column: 1;
+    grid-row: auto;
+  }
   .send-button { width: 100%; }
   .endpoint-button { flex: 1 1 40%; }
-  .route-row { grid-template-columns: 65px 100px minmax(80px, 1fr); gap: 8px; }
+  .route-row {
+    grid-template-columns: 65px 100px minmax(80px, 1fr);
+    gap: 8px;
+  }
   .method-badge { width: 62px; }
 }
 </style>
@@ -432,8 +432,8 @@ button:disabled {
 </main>
 
 <script>
-// O painel chama a entrada da Cequence, nao o backend diretamente.
-const CEQUENCE_BASE_URL = 'https://api.datacequencelab.dpdns.org';
+const CEQUENCE_BASE_URL =
+  'https://edge.datacequencelab.dpdns.org';
 
 const methodEl = document.getElementById('method');
 const pathEl = document.getElementById('path');
@@ -451,8 +451,11 @@ async function sendRequest() {
     headers = JSON.parse(headersEl.value || '{}');
     body = JSON.parse(bodyEl.value || '{}');
 
-    if (!headers || Array.isArray(headers) || typeof headers !== 'object') {
-      throw new Error('Os cabeçalhos precisam ser um objeto JSON.');
+    if (!headers || Array.isArray(headers) ||
+        typeof headers !== 'object') {
+      throw new Error(
+        'Os cabeçalhos precisam ser um objeto JSON.'
+      );
     }
   } catch (error) {
     statusEl.textContent = 'Erro de configuração';
@@ -464,7 +467,8 @@ async function sendRequest() {
 
   if (!path.startsWith('/') || path.startsWith('//')) {
     statusEl.textContent = 'Caminho inválido';
-    resultEl.textContent = 'Informe um caminho iniciado por uma única barra /.';
+    resultEl.textContent =
+      'Informe um caminho iniciado por uma única barra /.';
     return;
   }
 
@@ -490,16 +494,16 @@ async function sendRequest() {
   resultEl.textContent = 'Aguardando resposta...';
 
   try {
-    // Importante: o destino e o path sao combinados para passar
-    // pela entrada publica da Cequence.
     const targetUrl = new URL(path, CEQUENCE_BASE_URL);
     const response = await fetch(targetUrl.toString(), options);
     const text = await response.text();
 
-    statusEl.textContent = 'HTTP ' + response.status + ' ' + response.statusText;
+    statusEl.textContent =
+      'HTTP ' + response.status + ' ' + response.statusText;
 
     try {
-      resultEl.textContent = JSON.stringify(JSON.parse(text), null, 2);
+      resultEl.textContent =
+        JSON.stringify(JSON.parse(text), null, 2);
     } catch {
       resultEl.textContent = text;
     }
@@ -507,7 +511,7 @@ async function sendRequest() {
     statusEl.textContent = 'Falha na requisição';
     resultEl.textContent =
       error.message +
-      '\\n\\nSe aparecer um erro de CORS, verifique a política CORS da entrada da Cequence.';
+      '\\n\\nSe aparecer erro de CORS, verifique a política CORS da Cequence.';
   } finally {
     sendButton.disabled = false;
   }
@@ -528,7 +532,8 @@ document.getElementById('copy').addEventListener('click', async () => {
     await navigator.clipboard.writeText(resultEl.textContent);
     statusEl.textContent += ' · Resposta copiada';
   } catch {
-    statusEl.textContent += ' · Não foi possível copiar automaticamente';
+    statusEl.textContent +=
+      ' · Não foi possível copiar automaticamente';
   }
 });
 </script>
@@ -537,7 +542,7 @@ document.getElementById('copy').addEventListener('click', async () => {
 });
 
 // ==================================================
-// ENDPOINTS HTTPBIN NO BACKEND
+// ENDPOINTS HTTPBIN PARA EXECUCAO LOCAL
 // ==================================================
 
 function echoRequest(req, res) {
@@ -627,7 +632,9 @@ app.use((err, req, res, next) => {
   const status = err.status || err.statusCode || 500;
 
   res.status(status).json({
-    error: status === 500 ? 'Internal Server Error' : err.message
+    error: status === 500
+      ? 'Internal Server Error'
+      : err.message
   });
 });
 
